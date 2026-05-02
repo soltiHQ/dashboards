@@ -1,0 +1,2 @@
+# dashboards
+Solti Grafana dashboards
