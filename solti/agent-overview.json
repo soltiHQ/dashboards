@@ -945,254 +945,6 @@
         "x": 0,
         "y": 15
       },
-      "id": 102,
-      "title": "API",
-      "type": "row",
-      "panels": []
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "Client-facing API traffic. \n\nGreen = 2xx/gRPC OK\n\nyellow = 4xx\n\nred = 5xx/gRPC non-zero.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 40,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "^(grpc 0|http 2..)"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "^http 4"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "^http 5|^grpc [^0]"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 10,
-        "x": 0,
-        "y": 16
-      },
-      "id": 70,
-      "options": {
-        "annotations": {
-          "clustering": -1,
-          "multiLane": false
-        },
-        "legend": {
-          "calcs": [
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "13.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by (transport, status) (rate(solti_api_requests_total[$__rate_interval]) * on (instance) group_left(agent) solti_build_info{agent=~\"$agent\"})",
-          "legendFormat": "{{transport}} {{status}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Requests by status",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "Heatmap of request latency across all routes. \n\nBright bands = dominant latency bucket right now.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "scaleDistribution": {
-              "type": "linear"
-            }
-          }
-        }
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 14,
-        "x": 10,
-        "y": 16
-      },
-      "id": 71,
-      "options": {
-        "annotations": {
-          "clustering": -1,
-          "multiLane": false
-        },
-        "calculate": false,
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Turbo",
-          "steps": 64
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-09
-        },
-        "legend": {
-          "show": true
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "tooltip": {
-          "mode": "single",
-          "showColorScale": false,
-          "yHistogram": true
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false,
-          "unit": "s"
-        }
-      },
-      "pluginVersion": "13.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by (le) (rate(solti_api_request_duration_seconds_bucket[$__rate_interval]) * on (instance) group_left(agent) solti_build_info{agent=~\"$agent\"})",
-          "format": "heatmap",
-          "legendFormat": "{{le}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "API latency",
-      "type": "heatmap"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
       "id": 97,
       "title": "Workload",
       "type": "row",
@@ -1329,7 +1081,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 24
+        "y": 16
       },
       "id": 20,
       "options": {
@@ -1550,7 +1302,7 @@
         "h": 8,
         "w": 16,
         "x": 8,
-        "y": 24
+        "y": 16
       },
       "id": 21,
       "options": {
@@ -1595,7 +1347,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 24
       },
       "id": 98,
       "title": "Activity",
@@ -1625,7 +1377,7 @@
             "h": 10,
             "w": 14,
             "x": 0,
-            "y": 33
+            "y": 25
           },
           "id": 32,
           "options": {
@@ -1797,7 +1549,7 @@
             "h": 10,
             "w": 10,
             "x": 14,
-            "y": 33
+            "y": 25
           },
           "id": 31,
           "options": {
@@ -1866,7 +1618,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 25
       },
       "id": 101,
       "title": "Event bus",
@@ -1937,7 +1689,7 @@
             "h": 7,
             "w": 16,
             "x": 0,
-            "y": 34
+            "y": 26
           },
           "id": 60,
           "options": {
@@ -2117,7 +1869,7 @@
             "h": 7,
             "w": 8,
             "x": 16,
-            "y": 34
+            "y": 26
           },
           "id": 61,
           "options": {
@@ -2175,7 +1927,256 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 26
+      },
+      "id": 102,
+      "title": "API",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Client-facing API traffic. \n\nGreen = 2xx/gRPC OK\n\nyellow = 4xx\n\nred = 5xx/gRPC non-zero.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 40,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "reqps"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "^(grpc 0|http 2..)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "^http 4"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "^http 5|^grpc [^0]"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 10,
+            "x": 0,
+            "y": 27
+          },
+          "id": 70,
+          "options": {
+            "annotations": {
+              "clustering": -1,
+              "multiLane": false
+            },
+            "legend": {
+              "calcs": [
+                "mean"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "13.0.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "sum by (transport, status) (rate(solti_api_requests_total[$__rate_interval]) * on (instance) group_left(agent) solti_build_info{agent=~\"$agent\"})",
+              "legendFormat": "{{transport}} {{status}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Requests by status",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Heatmap of request latency across all routes. \n\nBright bands = dominant latency bucket right now.",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              }
+            }
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 14,
+            "x": 10,
+            "y": 27
+          },
+          "id": 71,
+          "options": {
+            "annotations": {
+              "clustering": -1,
+              "multiLane": false
+            },
+            "calculate": false,
+            "cellGap": 1,
+            "color": {
+              "exponent": 0.5,
+              "fill": "dark-orange",
+              "mode": "scheme",
+              "reverse": false,
+              "scale": "exponential",
+              "scheme": "Turbo",
+              "steps": 64
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-09
+            },
+            "legend": {
+              "show": true
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "tooltip": {
+              "mode": "single",
+              "showColorScale": false,
+              "yHistogram": true
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false,
+              "unit": "s"
+            }
+          },
+          "pluginVersion": "13.0.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "sum by (le) (rate(solti_api_request_duration_seconds_bucket[$__rate_interval]) * on (instance) group_left(agent) solti_build_info{agent=~\"$agent\"})",
+              "format": "heatmap",
+              "legendFormat": "{{le}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "API latency",
+          "type": "heatmap"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
       },
       "id": 99,
       "title": "Lifecycle",
@@ -2278,7 +2279,7 @@
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 35
+            "y": 28
           },
           "id": 40,
           "options": {
@@ -2429,7 +2430,7 @@
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 35
+            "y": 28
           },
           "id": 41,
           "options": {
@@ -2498,7 +2499,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 28
       },
       "id": 103,
       "title": "Discovery",
@@ -2601,7 +2602,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 36
+            "y": 29
           },
           "id": 80,
           "options": {
@@ -2705,7 +2706,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 36
+            "y": 29
           },
           "id": 81,
           "options": {
@@ -2752,7 +2753,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 29
       },
       "id": 100,
       "title": "Admission",
@@ -2855,7 +2856,7 @@
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 37
+            "y": 30
           },
           "id": 50,
           "options": {
@@ -2970,7 +2971,7 @@
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 37
+            "y": 30
           },
           "id": 51,
           "options": {
@@ -3017,7 +3018,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 30
       },
       "id": 104,
       "title": "Host",
@@ -3058,7 +3059,7 @@
             "h": 4,
             "w": 6,
             "x": 0,
-            "y": 38
+            "y": 31
           },
           "id": 90,
           "options": {
@@ -3126,7 +3127,7 @@
             "h": 4,
             "w": 6,
             "x": 6,
-            "y": 38
+            "y": 31
           },
           "id": 94,
           "options": {
@@ -3200,7 +3201,7 @@
             "h": 4,
             "w": 6,
             "x": 12,
-            "y": 38
+            "y": 31
           },
           "id": 92,
           "options": {
@@ -3268,7 +3269,7 @@
             "h": 4,
             "w": 6,
             "x": 18,
-            "y": 38
+            "y": 31
           },
           "id": 93,
           "options": {
